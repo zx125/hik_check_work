@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zx.dao.LeaveMapper" >
+  <select id="selectLeave" resultType="com.zx.pojo.Leave" parameterType="java.util.HashMap">
+    select a.*,b.name,c.dName FROM `leave` a,staff b,department c
+    where a.staffId=b.staffId and b.departmentId = c.departmentId
+    <if test="start!=null and size!=null">
+      limit #{start},#{size}
+    </if>
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select COUNT(*) from `leave`
+  </select>
+</mapper>

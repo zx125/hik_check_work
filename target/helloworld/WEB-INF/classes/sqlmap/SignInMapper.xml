@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zx.dao.SignInMapper" >
+  <resultMap id="BaseResultMap" type="com.zx.pojo.SignIn" >
+    <id column="sId" property="sid" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="date" property="date" jdbcType="TIMESTAMP" />
+    <result column="staffId" property="staffid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    sId, state, date, staffId
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zx.pojo.SignInExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sign-in
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sign-in
+    where sId = #{sid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from `sign-in`
+    where sId = #{sid}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zx.pojo.SignInExample" >
+    delete from `sign-in`
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zx.pojo.SignIn" >
+    insert into sign-in (sId, state, date, 
+      staffId)
+    values (#{sid,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{date,jdbcType=TIMESTAMP}, 
+      #{staffid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zx.pojo.SignIn" >
+    insert into sign-in
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        sId,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="staffid != null" >
+        staffId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="staffid != null" >
+        #{staffid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="getCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+    SELECT COUNT(*) FROM `sign-in`
+    <if test="day != null and day2 !=null">
+      where DATE_FORMAT(date,'%Y-%m-%d') between #{day} and #{day2}
+      <if test="state != null">
+        AND state = #{state}
+      </if>
+    </if>
+  </select>
+  <select id="countDayState" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM `sign-in`
+    <if test="day2==null">
+      WHERE DATE_FORMAT(date,'%Y-%m-%d')=#{day}
+    </if>
+    <if test="day2!=null">
+      WHERE DATE_FORMAT(date,'%Y-%m-%d') between #{day} and #{day2}
+    </if>
+    <if test="state!=null">
+      AND state = #{state}
+    </if>
+  </select>
+  <select id="selectstaffIdbysId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT staffId FROM `sign-in` WHERE signInId=#{signInId}
+  </select>
+  <select id="countMouthState" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select count(*) from `sign-in`
+    where DATE_FORMAT(date,'%Y-%m')=#{mouth}
+    <if test="state!=null">
+      AND state = #{state}
+    </if>
+    <if test="staffid!=null">
+      AND staffid = #{staffid}
+    </if>
+  </select>
+  <select id="selectSignInDetail" resultType="com.zx.pojo.SignInDetail" parameterType="java.util.HashMap">
+    SELECT a.signInId,b.`name`,c.dName,b.sex,d.pName,a.date,a.state,e.stateName
+    FROM `sign-in` a,staff b,department c,position d,state e
+    WHERE a.staffId=b.staffId AND b.departmentId=c.departmentId AND c.positionId=d.positionId AND a.state=e.stateId
+    <if test="day==day2">
+      AND DATE_FORMAT(date,'%Y-%m-%d')=#{day}
+    </if>
+    <if test="day2==null ">
+      AND DATE_FORMAT(date,'%Y-%m-%d')=#{day}
+    </if>
+    <if test="staffId!=null">
+      AND a.staffId = #{staffId}
+    </if>
+    <if test="day!=null and day2!=null">
+      AND DATE_FORMAT(date,'%Y-%m-%d') between #{day} and #{day2}
+    </if>
+    <if test="state !=null">
+      AND state = #{state}
+    </if>
+    <if test="start!=null and size!=null">
+      limit #{start},#{size}
+    </if>
+  </select>
+  <select id="countByExample" parameterType="com.zx.pojo.SignInExample" resultType="java.lang.Integer" >
+    select count(*) from sign-in
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sign-in
+    <set >
+      <if test="record.sid != null" >
+        sId = #{record.sid,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        state = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.date != null" >
+        date = #{record.date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.staffid != null" >
+        staffId = #{record.staffid,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sign-in
+    set sId = #{record.sid,jdbcType=INTEGER},
+      state = #{record.state,jdbcType=INTEGER},
+      date = #{record.date,jdbcType=TIMESTAMP},
+      staffId = #{record.staffid,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zx.pojo.SignIn" >
+    update sign-in
+    <set >
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        date = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="staffid != null" >
+        staffId = #{staffid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where sId = #{sid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zx.pojo.SignIn" >
+    update sign-in
+    set state = #{state,jdbcType=INTEGER},
+      date = #{date,jdbcType=TIMESTAMP},
+      staffId = #{staffid,jdbcType=INTEGER}
+    where sId = #{sid,jdbcType=INTEGER}
+  </update>
+  <select id="selectCountByStatement" parameterType="com.zx.pojo.StatementBean" resultType="java.lang.Integer">
+    select COUNT(*) FROM `sign-in`
+    where staffId=#{staffId}
+    And state=#{state}
+    <if test="mTime!=null">
+    And date between #{mTime} and #{eTime}
+    </if>
+  </select>
+  <insert id="addSignIn">
+    insert into `sign-in` (date,staffId,deviceId,state) values (#{0},#{1},#{2},0)
+  </insert>
+</mapper>
